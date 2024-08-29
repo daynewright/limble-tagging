@@ -1,0 +1,83 @@
+<div class="flex flex-col h-full bg-white">
+  <div class="flex-1 px-6 py-4">
+    <!-- Header Section -->
+    <div class="flex justify-between">
+      <div class="my-4">
+        <h2 class="text-2xl font-semibold">Task Name</h2>
+        <p class="text-sm text-gray-600">Task description goes here.</p>
+        <p>status</p>
+      </div>
+      <div>
+        <button (click)="closeModal()" class="w-6 h-6 focus:outline-none">
+          <img src="assets/svgs/close.svg" />
+        </button>
+      </div>
+    </div>
+
+    <!-- Task Parts Section -->
+    <div class="mb-4">
+      <h3 class="text-lg font-medium text-gray-900">Parts</h3>
+      <ul class="space-y-2 text-sm">
+        <li class="p-2 bg-gray-100 rounded shadow-sm">
+          <img src="assets/svgs/wrench.svg" class="w-6 h-6 inline pr-2" />
+          User comment 1
+        </li>
+        <li class="p-2 bg-gray-100 rounded shadow-sm">
+          <img src="assets/svgs/wrench.svg" class="w-6 h-6 inline pr-2" />
+          User comment 2
+        </li>
+      </ul>
+    </div>
+
+    <!-- Task Notes Section -->
+    <div class="mb-4">
+      <h3 class="text-lg font-medium text-gray-900">Notes</h3>
+      <p class="text-sm text-gray-600">Detailed notes about the task.</p>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="mb-4">
+      <h3 class="text-lg font-medium text-gray-900">Comments</h3>
+      <ul class="space-y-2 text-sm">
+        <li class="p-2 bg-gray-100 rounded shadow-sm">
+          <img src="assets/svgs/chat.svg" class="w-6 h-6 inline pr-2" />
+          User comment 1
+        </li>
+        <li class="p-2 bg-gray-100 rounded shadow-sm">
+          <img src="assets/svgs/chat.svg" class="w-6 h-6 inline pr-2" />
+          User comment 2
+        </li>
+        <!-- More comments -->
+      </ul>
+    </div>
+
+    <!-- Comment Input Form -->
+    <div class="mt-4">
+      <form>
+        <div class="flex items-center space-x-2">
+          <input
+            type="text"
+            placeholder="Add a comment"
+            class="w-full p-2 border border-gray-300 rounded"
+          />
+          <button
+            type="submit"
+            class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Close Button -->
+  <div class="px-6 py-4 bg-gray-100 rounded-b-lg text-right">
+    <button
+      (click)="closeModal()"
+      class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
+    >
+      Close
+    </button>
+  </div>
+</div>

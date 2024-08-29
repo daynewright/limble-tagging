@@ -1,0 +1,158 @@
+<section>
+  <div class="p-8 mx-auto max-w-5xl">
+    <!-- Heading -->
+    <div class="mb-6">
+      <h2 class="text-2xl font-semibold text-gray-900">Asset Tasks Overview</h2>
+      <p class="text-sm text-gray-600">
+        List of asset tasks with status, parts needed, notes, and assigned
+        personnel.
+      </p>
+    </div>
+
+    <!-- Asset Details -->
+    <div class="bg-white border border-gray-200 p-6 rounded-lg shadow-sm mb-6">
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Asset Name</h3>
+      <p class="mt-1 text-sm text-gray-500">
+        Description of the asset and related details.
+      </p>
+    </div>
+
+    <!-- Tasks List -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Tasks</h3>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <!-- Task Item -->
+        <div
+          (click)="openTaskModal()"
+          class="cursor-pointer flex py-4 px-6 items-center hover:bg-gray-50"
+        >
+          <!-- Task Details -->
+          <div class="flex-none w-1/4 pr-2">
+            <h4 class="text-sm font-medium text-gray-900 truncate">
+              Replace broken part
+            </h4>
+            <p class="mt-1 text-sm text-gray-500 truncate">Part A, Part B</p>
+          </div>
+          <!-- Notes Section -->
+          <div class="flex-none w-1/4 px-2">
+            <p
+              class="text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded-md truncate"
+            >
+              <img src="assets/svgs/note.svg" class="w-4 h-4 inline" />
+              Notes about the task
+            </p>
+          </div>
+          <!-- Status -->
+          <div class="flex-none w-1/4 px-2">
+            <span
+              class="inline-block py-1 px-3 text-xs font-medium text-gray-800 bg-gray-100 shadow-md truncate"
+            >
+              <img src="assets/svgs/checkbox.svg" class="w-4 h-4 inline pr-1" />
+              Completed
+            </span>
+          </div>
+          <!-- Assigned To -->
+          <div class="flex-none w-1/4 px-2 flex items-center space-x-2">
+            <img src="assets/svgs/user.svg" alt="User Name" class="w-6 h-6" />
+            <span class="text-sm truncate">John Doe</span>
+          </div>
+        </div>
+        <div
+          (click)="openTaskModal()"
+          class="cursor-pointer flex py-4 px-6 items-center hover:bg-gray-50"
+        >
+          <div class="flex-none w-1/4 pr-2">
+            <h4 class="text-sm font-medium text-gray-900 truncate">
+              Replace broken part
+            </h4>
+            <p class="mt-1 text-sm text-gray-500 truncate">Part A, Part B</p>
+          </div>
+          <div class="flex-none w-1/4 px-2">
+            <p
+              class="text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded-md truncate"
+            >
+              <img src="assets/svgs/note.svg" class="w-4 h-4 inline" />
+              Notes about the task
+            </p>
+          </div>
+          <div class="flex-none w-1/4 px-2">
+            <span
+              class="inline-block py-1 px-3 text-xs font-medium text-gray-800 bg-green-100 shadow-md"
+            >
+              <img src="assets/svgs/wrench.svg" class="w-4 h-4 inline pr-1" />
+              In Progress
+            </span>
+          </div>
+          <div class="flex-none w-1/4 px-2 flex items-center space-x-2">
+            <img src="assets/svgs/user.svg" alt="User Name" class="w-6 h-6" />
+            <span class="text-sm truncate">John Doe</span>
+          </div>
+        </div>
+        <div
+          (click)="openTaskModal()"
+          class="cursor-pointer flex py-4 px-6 items-center hover:bg-gray-50"
+        >
+          <div class="flex-none w-1/4 pr-2">
+            <h4 class="text-sm font-medium text-gray-900">
+              Replace broken part
+            </h4>
+            <p class="mt-1 text-sm text-gray-500 truncate">Part A, Part B</p>
+          </div>
+          <div class="flex-none w-1/4 px-2">
+            <p
+              class="text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded-md"
+            >
+              <img src="assets/svgs/note.svg" class="w-4 h-4 inline" />
+              Notes about the task
+            </p>
+          </div>
+          <div class="flex-none w-1/4 px-2">
+            <span
+              class="inline-block py-1 px-3 text-xs font-medium text-gray-800 bg-red-100 shadow-md"
+            >
+              <img src="assets/svgs/pause.svg" class="w-4 h-4 inline pr-1" />
+              Paused
+            </span>
+          </div>
+          <div class="flex-none w-1/4 px-2 flex items-center space-x-2">
+            <img src="assets/svgs/user.svg" alt="User Name" class="w-6 h-6" />
+            <span class="text-sm truncate">John Doe</span>
+          </div>
+        </div>
+        <div
+          (click)="openTaskModal()"
+          class="cursor-pointer flex py-4 px-6 items-center hover:bg-gray-50"
+        >
+          <div class="flex-none w-1/4 pr-2">
+            <h4 class="text-sm font-medium text-gray-900 truncate">
+              Replace broken part
+            </h4>
+            <p class="mt-1 text-sm text-gray-500 truncate">Part A, Part B</p>
+          </div>
+          <div class="flex-none w-1/4 px-2">
+            <p
+              class="text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded-md"
+            >
+              <img src="assets/svgs/note.svg" class="w-4 h-4 inline" />
+              Notes about the task
+            </p>
+          </div>
+          <div class="flex-none w-1/4 px-2">
+            <span
+              class="inline-block py-1 px-3 text-xs font-medium text-gray-800 bg-blue-100 shadow-md"
+            >
+              <img src="assets/svgs/play.svg" class="w-4 h-4 inline pr-1" />
+              Ready
+            </span>
+          </div>
+          <div class="flex-none w-1/4 px-2 flex items-center space-x-2">
+            <img src="assets/svgs/user.svg" alt="User Name" class="w-6 h-6" />
+            <span class="text-sm truncate">John Doe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
