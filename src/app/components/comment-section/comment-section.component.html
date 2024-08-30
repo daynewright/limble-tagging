@@ -14,24 +14,21 @@
       <span class="font-bold italic mr-4"
         >{{ comment.user?.name ?? "UNKNOWN" }}:</span
       >
-      {{ comment.message }}
+      <span [innerHTML]="formatCommentForTags(comment.message)"></span>
     </li>
   </ul>
 
   <div class="mt-4">
     <form (ngSubmit)="commentSubmit()">
+      <app-tag-input
+        [users]="users"
+        [(ngModel)]="newCommentMessage"
+        name="commentMessage"
+      />
       <div class="flex items-center space-x-2">
-        <input
-          type="text"
-          placeholder="Add a comment"
-          class="w-full p-2 border border-gray-300 rounded"
-          [(ngModel)]="newCommentMessage"
-          name="commentMessage"
-          required
-        />
         <button
           type="submit"
-          class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+          class="text-sm px-2 py-1 mt-4 text-white bg-orange-500 rounded hover:bg-orange-400"
         >
           Submit
         </button>

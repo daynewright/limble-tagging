@@ -112,7 +112,7 @@ export class TaskListComponent {
     this.dialog.open(TaskModalComponent, {
       width: '90vw',
       maxWidth: '95vw',
-      height: '80vh',
+      minHeight: '90vh',
       data: {
         task: this.tasks.find((task) => task.id === taskId),
       },
