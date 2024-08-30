@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { User } from './user.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 export interface Comment {
   id: number;
@@ -12,13 +14,14 @@ export interface Comment {
   providedIn: 'root',
 })
 export class CommentService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
+  private commentUrl = `${environment.apiUrl}/comments`;
 
   getAllCommentsByTaskId(taskId: number): Observable<Comment[]> {
-    return of();
+    return this.http.get<Comment[]>(`${this.commentUrl}?taskId=${taskId}`);
   }
 
   getCommentById(commentId: number): Observable<Comment> {
-    return of();
+    return this.http.get<Comment>(`${this.commentUrl}/${commentId}`);
   }
 }

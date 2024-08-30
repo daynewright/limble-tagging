@@ -11,14 +11,15 @@
 
     <!-- Asset Details -->
     <div class="bg-white border border-gray-200 p-6 rounded-lg shadow-sm mb-6">
-      <h3 class="text-lg font-medium leading-6 text-gray-900">Asset Name</h3>
+      <h3 class="text-lg font-medium leading-6 text-gray-900">
+        {{ asset?.name }}
+      </h3>
       <p class="mt-1 text-sm text-gray-500">
-        Description of the asset and related details.
+        {{ asset?.description }}
       </p>
     </div>
 
     <!-- Tasks List -->
-
     <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
       <div class="px-6 py-4 border-b border-gray-200">
         <h3 class="text-lg font-medium leading-6 text-gray-900">Tasks</h3>
@@ -35,18 +36,18 @@
 
         <div
           *ngFor="let task of tasks"
-          (click)="openTaskModal()"
+          (click)="openTaskModal(task.id)"
           class="cursor-pointer flex py-4 px-6 items-center hover:bg-gray-50"
         >
           <!-- Task Details -->
-          <div class="flex-none w-1/4 pr-2">
+          <div class="w-1/4 pr-2">
             <h4 class="text-sm font-medium text-gray-900 truncate">
               {{ task.name }}
             </h4>
             <p class="mt-1 text-sm text-gray-500 truncate">Part A, Part B</p>
           </div>
           <!-- Notes Section -->
-          <div class="flex-none w-1/4 px-2">
+          <div class="w-1/4 px-2">
             <p
               class="text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded-md truncate"
             >
@@ -55,9 +56,9 @@
             </p>
           </div>
           <!-- Status -->
-          <div class="flex-none w-1/4 px-2">
+          <div class="flex justify-end w-1/4 px-2 pr-6">
             <span
-              class="inline-block py-1 px-3 text-xs font-medium text-gray-800 shadow-md truncate"
+              class="py-1 px-3 text-xs font-medium text-gray-800 shadow-md truncate"
               [ngClass]="getStatusClass(task.status)"
             >
               <img
@@ -68,9 +69,23 @@
             </span>
           </div>
           <!-- Assigned To -->
-          <div class="flex-none w-1/4 px-2 flex items-center space-x-2">
-            <img src="assets/svgs/user.svg" alt="User Name" class="w-6 h-6" />
-            <span class="text-sm truncate">John Doe</span>
+          <div class="w-1/4 px-2 flex items-center space-x-2">
+            <div *ngIf="task.assignedUser; else noUser">
+              <img
+                [src]="task.assignedUser.avatar"
+                alt="User Name"
+                class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 inline mr-4"
+              />
+              <span class="truncate">{{ task.assignedUser.name }}</span>
+            </div>
+            <ng-template #noUser>
+              <img
+                src="assets/svgs/user.svg"
+                alt="User Name"
+                class="w-10 h-10"
+              />
+              <span class="text-sm truncate">UNKNOWN</span>
+            </ng-template>
           </div>
         </div>
       </div>

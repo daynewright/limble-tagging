@@ -4,35 +4,16 @@
   >
     <div class="relative flex h-16 justify-between">
       <div class="relative z-10 flex px-2 lg:px-0">
-        <div class="flex flex-shrink-0 items-center">
+        <button
+          [routerLink]="['/assets']"
+          class="flex flex-shrink-0 items-center"
+        >
           <img
             class="h-8 w-auto"
             src="assets/svgs/limble.svg"
             alt="Limble CMMS"
           />
-        </div>
-      </div>
-      <div
-        class="relative z-0 flex flex-1 items-center justify-center px-2 sm:absolute sm:inset-0"
-      >
-        <nav class="hidden lg:flex lg:space-x-8 lg:py-2" aria-label="Global">
-          <a
-            href="#"
-            class="text-white hover:bg-orange-500 inline-flex items-center rounded-md py-2 px-3 text-sm font-medium"
-            aria-current="page"
-            >Dashboard</a
-          >
-          <a
-            href="#"
-            class="text-white hover:bg-orange-500 inline-flex items-center rounded-md py-2 px-3 text-sm font-medium"
-            >Assets</a
-          >
-          <a
-            href="#"
-            class="text-white hover:bg-orange-500 inline-flex items-center rounded-md py-2 px-3 text-sm font-medium"
-            >Tasks</a
-          >
-        </nav>
+        </button>
       </div>
       <div class="relative z-10 flex items-center lg:hidden">
         <!-- Mobile menu button -->
@@ -166,24 +147,6 @@
     aria-label="Global"
     id="mobile-menu"
   >
-    <div class="space-y-1 px-2 pb-3 pt-2">
-      <a
-        href="#"
-        class="text-white hover:bg-orange-500 block rounded-md py-2 px-3 text-base font-medium"
-        aria-current="page"
-        >Dashboard</a
-      >
-      <a
-        href="#"
-        class="text-white hover:bg-orange-500 block rounded-md py-2 px-3 text-base font-medium"
-        >Assets</a
-      >
-      <a
-        href="#"
-        class="text-white hover:bg-orange-500 block rounded-md py-2 px-3 text-base font-medium"
-        >Tasks</a
-      >
-    </div>
     <div class="border-t border-gray-200 pb-3 pt-4">
       <div class="flex items-center px-4">
         <div class="flex-shrink-0">
