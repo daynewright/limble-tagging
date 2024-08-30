@@ -1,0 +1,28 @@
+<div class="relative">
+  <input
+    type="text"
+    [value]="value"
+    (input)="onInput($event)"
+    placeholder="Type @ to tag a user"
+    class="w-full p-2 border border-gray-300 rounded"
+  />
+  <ul
+    #tagDropdown
+    *ngIf="showSuggestions"
+    class="py-2 text-sm absolute max-h-64 rounded-lg overflow-auto bg-white border-2 border-gray-200"
+    [ngStyle]="{ 'top.px': dropdownTop, 'left.px': dropdownLeft }"
+  >
+    <li
+      *ngFor="let user of filteredUsers"
+      (click)="selectUser(user)"
+      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer z-30"
+    >
+      <img
+        [src]="user.avatar"
+        alt="User Name"
+        class="w-8 h-8 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 inline mr-4"
+      />
+      {{ user.name }}
+    </li>
+  </ul>
+</div>

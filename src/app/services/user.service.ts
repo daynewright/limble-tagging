@@ -25,7 +25,6 @@ export class UserService {
   }
 
   getUsersByIds(userIds: string[]): Observable<User[]> {
-    console.log({ userIds }); // Verify the IDs being used
     return this.http.get<User[]>(this.userUrl);
     // .pipe(map((users) => users.filter((user) => userIds.includes(user.id))));
   }
