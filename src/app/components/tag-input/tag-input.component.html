@@ -1,5 +1,6 @@
 <div class="relative">
   <input
+    #mainInput
     type="text"
     [value]="value"
     (input)="onInput($event)"
@@ -8,6 +9,7 @@
   />
   <ul
     #tagDropdown
+    tabindex="-1"
     *ngIf="showSuggestions"
     class="py-2 text-sm absolute max-h-64 rounded-lg overflow-auto bg-white border-2 border-gray-200"
     [ngStyle]="{ 'top.px': dropdownTop, 'left.px': dropdownLeft }"
