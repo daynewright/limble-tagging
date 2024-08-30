@@ -1,4 +1,11 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgIf, NgFor, NgStyle } from '@angular/common';
 
@@ -58,6 +65,9 @@ export class TagInputComponent implements ControlValueAccessor {
       this.filteredUsers = this.users.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      if (!this.filteredUsers.length) {
+        this.showSuggestions = false;
+      }
     } else {
       this.filteredUsers = this.users;
     }

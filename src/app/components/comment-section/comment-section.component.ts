@@ -24,7 +24,7 @@ export class CommentSectionComponent {
     const getTagsRegex = /@(\w+[\w-]*)(?=[\s.!?]|$)/g;
     return comment.replace(
       getTagsRegex,
-      '<span class="bg-yellow-100 italic font-semibold">@$1</span>'
+      '<span class="bg-yellow-100 px-1 rounded-sm font-semibold">@$1</span>'
     );
   }
 
