@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Task } from './task.service';
 
 export interface Asset {
   id: number;
   name: string;
   description?: string;
-  tasks?: Task[];
+  taskIds?: number[];
 }
 
 @Injectable({

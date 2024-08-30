@@ -1,0 +1,50 @@
+<section>
+  <div class="p-8 mx-auto max-w-5xl">
+    <!-- Heading -->
+    <div class="mb-6">
+      <h2 class="text-2xl font-semibold text-gray-900">Asset Overview</h2>
+      <p class="text-sm text-gray-600">List of all of your assets.</p>
+    </div>
+
+    <!-- Asset List -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Assets</h3>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <!-- Asset Item -->
+        <div *ngIf="!assets.length" class="flex justify-center bg-yellow-100">
+          <p class="p-10 font-semibold">
+            Oops... doesn't look like we have assets to show at the moment.
+          </p>
+        </div>
+
+        <button
+          *ngFor="let asset of assets"
+          [routerLink]="['/assets', asset.id, 'tasks']"
+          class="cursor-pointer flex py-4 px-6 items-center min-w-full hover:bg-gray-50 hover:text-orange-500"
+        >
+          <!-- Asset Details -->
+          <div class="w-1/4 pr-2">
+            <h4 class="text-lg font-medium">
+              {{ asset.name }}
+            </h4>
+          </div>
+          <!-- Asset Description -->
+          <div class="w-2/4 px-2">
+            <p
+              class="text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded-md"
+            >
+              <img src="assets/svgs/note.svg" class="w-4 h-4 inline text-sm" />
+              {{ asset.description }}
+            </p>
+          </div>
+          <!-- Status -->
+          <div class="w-1/4 px-2 text-sm">
+            {{ asset.taskIds?.length }} task(s)
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

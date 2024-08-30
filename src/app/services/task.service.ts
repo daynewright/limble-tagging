@@ -15,7 +15,8 @@ export interface Task {
   id: number;
   name: string;
   status: TaskStatus;
-  assignedTo?: User;
+  assignedTo?: number;
+  assignedUser?: User;
   notes?: string;
   comments?: Comment[];
 }
