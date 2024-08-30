@@ -30,8 +30,8 @@ export class TaskListComponent {
   asset: Asset | undefined = undefined;
 
   ngOnInit() {
-    const assetId = this.route.snapshot.paramMap.get('assetId') ?? '0';
-    this.getTasksByAssetId(parseInt(assetId));
+    const assetId = this.route.snapshot.paramMap.get('assetId') ?? 'asset-1';
+    this.getTasksByAssetId(assetId);
   }
 
   getStatusImage(status: TaskStatus): string {
@@ -66,8 +66,8 @@ export class TaskListComponent {
     });
   }
 
-  extractUserIdsFromTasks(tasks: Task[]): number[] {
-    const userIds = new Set<number>();
+  extractUserIdsFromTasks(tasks: Task[]): string[] {
+    const userIds = new Set<string>();
     tasks.forEach((task) => {
       if (task.assignedTo) {
         userIds.add(task.assignedTo);
@@ -76,7 +76,7 @@ export class TaskListComponent {
     return Array.from(userIds);
   }
 
-  getTasksByAssetId(assetId: number) {
+  getTasksByAssetId(assetId: string) {
     this.assetService
       .getAssetById(assetId)
       .pipe(
@@ -92,7 +92,6 @@ export class TaskListComponent {
             .pipe(map((users) => ({ tasks, users })));
         }),
         map(({ tasks, users }) => {
-          console.log({ users });
           this.users = users;
           this.tasks = tasks.map((task) => ({
             ...task,
@@ -103,13 +102,13 @@ export class TaskListComponent {
       .subscribe();
   }
 
-  getUsersForTasks(userIds: number[]) {
+  getUsersForTasks(userIds: string[]) {
     this.userService
       .getUsersByIds(userIds)
       .subscribe((users: User[]) => (this.users = users));
   }
 
-  openTaskModal(taskId: number): void {
+  openTaskModal(taskId: string): void {
     this.dialog.open(TaskModalComponent, {
       width: '90vw',
       maxWidth: '95vw',

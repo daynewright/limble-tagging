@@ -7,7 +7,7 @@
         <p class="text-sm text-gray-600">
           Assigned to: {{ task.assignedUser?.name }}
         </p>
-        <p>{{ task.status }}</p>
+        <p class="mt-2">{{ task.status }}</p>
       </div>
       <div>
         <button (click)="closeModal()" class="w-6 h-6 focus:outline-none">
@@ -22,47 +22,21 @@
       <p class="text-sm text-gray-600">{{ task.notes }}</p>
     </div>
 
-    <!-- Comments Section -->
-    <div class="mb-4">
-      <h3 class="text-lg font-medium text-gray-900">Comments</h3>
-      <ul class="space-y-2 text-sm">
-        <li
-          *ngFor="let comment of comments"
-          class="p-2 bg-gray-100 rounded shadow-sm"
-        >
-          <img src="assets/svgs/chat.svg" class="w-6 h-6 inline pr-2" />
-          {{ comment.comment }}
-        </li>
-      </ul>
-    </div>
+    <!-- Composable Comments Section -->
+    <app-comment-section
+      [comments]="comments"
+      [users]="users"
+      (submitComment)="postCommentByUserId($event)"
+    />
 
-    <!-- Comment Input Form -->
-    <div class="mt-4">
-      <form>
-        <div class="flex items-center space-x-2">
-          <input
-            type="text"
-            placeholder="Add a comment"
-            class="w-full p-2 border border-gray-300 rounded"
-          />
-          <button
-            type="submit"
-            class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
+    <!-- Close Button -->
+    <div class="px-6 py-4 bg-gray-100 rounded-b-lg text-right">
+      <button
+        (click)="closeModal()"
+        class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
+      >
+        Close
+      </button>
     </div>
-  </div>
-
-  <!-- Close Button -->
-  <div class="px-6 py-4 bg-gray-100 rounded-b-lg text-right">
-    <button
-      (click)="closeModal()"
-      class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
-    >
-      Close
-    </button>
   </div>
 </div>
