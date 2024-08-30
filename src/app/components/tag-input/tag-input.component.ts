@@ -1,8 +1,8 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   forwardRef,
+  HostListener,
   Input,
   ViewChild,
 } from '@angular/core';
@@ -26,6 +26,9 @@ import { User } from '../../services/user.service';
   ],
 })
 export class TagInputComponent implements ControlValueAccessor {
+  @ViewChild('tagDropdown') tagDropdownRef!: ElementRef<HTMLUListElement>;
+  @ViewChild('mainInput') mainInputRef!: ElementRef<HTMLInputElement>;
+
   @Input() users: User[] = [];
 
   private _value: string = '';
@@ -36,7 +39,7 @@ export class TagInputComponent implements ControlValueAccessor {
 
   dropdownTop: number = 45;
   dropdownLeft: number = 5;
-
+  arrowkeyLocation: number = -1;
   get value(): string {
     return this._value;
   }
@@ -44,6 +47,10 @@ export class TagInputComponent implements ControlValueAccessor {
   set value(val: string) {
     this._value = val;
     this.onChange(val);
+  }
+
+  constructor() {
+    this.arrowkeyLocation = this.arrowkeyLocation;
   }
 
   onInput(event: Event) {
@@ -57,6 +64,55 @@ export class TagInputComponent implements ControlValueAccessor {
     } else {
       this.filteredUsers = [];
     }
+  }
+
+  @HostListener('keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent) {
+    if (!this.showSuggestions) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+
+      if (this.tagDropdownRef) {
+        this.tagDropdownRef.nativeElement.focus();
+        this.arrowkeyLocation++;
+        this.updateHighlightedItem();
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+
+      if (this.tagDropdownRef && this.arrowkeyLocation > 0) {
+        this.arrowkeyLocation--;
+        this.updateHighlightedItem();
+      }
+    } else if (event.key === 'Enter') {
+      if (
+        this.arrowkeyLocation >= 0 &&
+        this.arrowkeyLocation < this.filteredUsers.length
+      ) {
+        event.preventDefault();
+        this.selectUser(this.filteredUsers[this.arrowkeyLocation]);
+        this.arrowkeyLocation = 0;
+      }
+    }
+  }
+
+  private updateHighlightedItem() {
+    if (this.arrowkeyLocation >= this.filteredUsers.length) {
+      this.arrowkeyLocation = this.filteredUsers.length - 1;
+    } else if (this.arrowkeyLocation < 0) {
+      this.arrowkeyLocation = 0;
+    }
+
+    const items = this.tagDropdownRef.nativeElement.querySelectorAll('li');
+    items.forEach((item: HTMLElement, index: number) => {
+      if (index === this.arrowkeyLocation) {
+        item.classList.add('bg-gray-100');
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        item.classList.remove('bg-gray-100');
+      }
+    });
   }
 
   showUserSuggestions(input: string) {
@@ -76,9 +132,11 @@ export class TagInputComponent implements ControlValueAccessor {
   selectUser(user: User) {
     const parts = this.value.split('@');
     parts.pop();
+
     this.value = `${parts.join('@')}@${user.name}`;
     this.filteredUsers = [];
     this.showSuggestions = false;
+    this.mainInputRef.nativeElement.focus();
   }
 
   writeValue(value: string): void {
