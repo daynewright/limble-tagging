@@ -1,27 +1,40 @@
 # LimbleTagging
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.1.
+This project allows users to view assets, tasks and create comments. Within the comments you are able to tag users through typing `@` followed by the user's name.
 
-## Development server
+## Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1. Download the project
+2. Install `node` and `npm` on your machine.
+3. run `npm install` to get the dependencies.
+4. run `node scripts/generate-data.js` to create the `db.json` file that is used with `json-server`.
+5. run `npm run start:db` to start the server on port 3000. The application uses this data.
+6. open a new terminal and run `npm start` within the project directory
+7. ENJOY! 🎉
 
-## Code scaffolding
+## Live version! 📺
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+You can interact with a live deployed version here: [https://limble-tagging.onrender.com/](https://limble-tagging.onrender.com/)
 
-## Build
+_(NOTE: It is deployed of a FREE teir of Render so it might take up to 60 secs before it responds.)_
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Tech Used
 
-## Running unit tests
+- Angular
+- TailwindCSS
+- JsonServer
+- Typescript
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## App Screens
 
-## Running end-to-end tests
+### Main view with asset list
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+![assets view](/images/assets.png)
 
-## Further help
+### List of tasks for an asset
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+![tasks view](/images/tasks.png)
+
+### Comments on a task with user selection
+
+![comment view](/images/comment.png)
