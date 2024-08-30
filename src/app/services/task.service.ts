@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { User } from './user.service';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { TaskComment } from './comment.service';
+import { User } from './user.service';
 
 export enum TaskStatus {
   Ready = 'Ready',
@@ -12,13 +13,14 @@ export enum TaskStatus {
 }
 
 export interface Task {
-  id: number;
+  id: string;
   name: string;
   status: TaskStatus;
-  assignedTo?: number;
+  assignedTo?: string;
   assignedUser?: User;
   notes?: string;
-  comments?: Comment[];
+  commentIds: string[];
+  comments?: TaskComment[];
 }
 
 @Injectable({
@@ -28,11 +30,11 @@ export class TaskService {
   constructor(private http: HttpClient) {}
   private taskUrl = `${environment.apiUrl}/tasks`;
 
-  getTasksByAssetId(assetId: number): Observable<Task[]> {
+  getTasksByAssetId(assetId: string): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.taskUrl}?assetId=${assetId}`);
   }
 
-  getTaskById(taskId: number): Observable<Task> {
+  getTaskById(taskId: string): Observable<Task> {
     return this.http.get<Task>(`${this.taskUrl}/${taskId}`);
   }
 }

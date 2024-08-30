@@ -1,0 +1,41 @@
+<div class="mb-4">
+  <h3 class="text-lg font-medium text-gray-900">
+    <img src="assets/svgs/chat.svg" class="w-6 h-6 inline" /> Comments
+  </h3>
+  <ul class="space-y-2 text-sm mt-2">
+    <li
+      *ngFor="let comment of comments"
+      class="p-2 bg-gray-100 rounded shadow-sm"
+    >
+      <img
+        [src]="comment.user?.avatar ?? 'assets/svgs/user.svg'"
+        class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 inline mr-4"
+      />
+      <span class="font-bold italic mr-4"
+        >{{ comment.user?.name ?? "UNKNOWN" }}:</span
+      >
+      {{ comment.message }}
+    </li>
+  </ul>
+
+  <div class="mt-4">
+    <form (ngSubmit)="commentSubmit()">
+      <div class="flex items-center space-x-2">
+        <input
+          type="text"
+          placeholder="Add a comment"
+          class="w-full p-2 border border-gray-300 rounded"
+          [(ngModel)]="newCommentMessage"
+          name="commentMessage"
+          required
+        />
+        <button
+          type="submit"
+          class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

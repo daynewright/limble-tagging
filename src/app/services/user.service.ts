@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
   avatar?: string;
 }
@@ -20,11 +20,11 @@ export class UserService {
     return this.http.get<User[]>(this.userUrl);
   }
 
-  getUserById(userId: number): Observable<User> {
+  getUserById(userId: string): Observable<User> {
     return this.http.get<User>(`${this.userUrl}/${userId}`);
   }
 
-  getUsersByIds(userIds: number[]): Observable<User[]> {
+  getUsersByIds(userIds: string[]): Observable<User[]> {
     console.log({ userIds }); // Verify the IDs being used
     return this.http.get<User[]>(this.userUrl);
     // .pipe(map((users) => users.filter((user) => userIds.includes(user.id))));

@@ -4,10 +4,10 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 export interface Asset {
-  id: number;
+  id: string;
   name: string;
   description?: string;
-  taskIds?: number[];
+  taskIds?: string[];
 }
 
 @Injectable({
@@ -21,7 +21,7 @@ export class AssetService {
     return this.http.get<Asset[]>(this.assetUrl);
   }
 
-  getAssetById(assetId: number): Observable<Asset> {
+  getAssetById(assetId: string): Observable<Asset> {
     return this.http.get<Asset>(`${this.assetUrl}/${assetId}`);
   }
 }
