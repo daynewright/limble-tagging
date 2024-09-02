@@ -12,7 +12,7 @@ const generateData = ({
   const users = Array.from({ length: userLength }, (_, id) => ({
     id: `user-${id + 1}`,
     name: faker.person.firstName(),
-    avatar: faker.image.urlLoremFlickr({ width: 300, height: 300 }),
+    avatar: faker.image.urlPicsumPhotos({ height: 300, width: 300 }),
   }));
 
   const tasks = Array.from({ length: taskLength }, (_, taskId) => {

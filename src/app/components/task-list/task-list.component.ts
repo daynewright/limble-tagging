@@ -60,12 +60,6 @@ export class TaskListComponent {
     }
   }
 
-  updateTasksWithUsers(tasks: Task[], users: User[]) {
-    tasks.forEach((task) => {
-      task.assignedUser = users.find((user) => user.id === task.assignedTo);
-    });
-  }
-
   extractUserIdsFromTasks(tasks: Task[]): string[] {
     const userIds = new Set<string>();
     tasks.forEach((task) => {

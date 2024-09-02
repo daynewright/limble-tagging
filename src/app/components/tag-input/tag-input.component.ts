@@ -49,10 +49,6 @@ export class TagInputComponent implements ControlValueAccessor {
     this.onChange(val);
   }
 
-  constructor() {
-    this.arrowkeyLocation = this.arrowkeyLocation;
-  }
-
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     this.value = input.value;
