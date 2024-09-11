@@ -41,16 +41,10 @@ const generateData = ({
   });
 
   const comments = Array.from({ length: commentLength }, (_, id) => {
-    const mentionUsers = Array.from(
-      { length: 2 },
-      () => users[Math.floor(Math.random() * users.length)].id
-    );
-
     return {
       id: `comment-${id + 1}`,
       userId: users[Math.floor(Math.random() * users.length)].id,
       message: faker.company.buzzPhrase(),
-      mentionUserIds: mentionUsers,
       taskId: tasks[Math.floor(Math.random() * tasks.length)].id,
     };
   });
