@@ -19,7 +19,7 @@ export interface Task {
   assignedTo?: string;
   assignedUser?: User;
   notes?: string;
-  commentIds: string[];
+  commentIds?: string[];
   comments?: TaskComment[];
 }
 

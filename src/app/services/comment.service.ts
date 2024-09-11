@@ -22,7 +22,7 @@ export class CommentService {
     return this.http.get<TaskComment[]>(`${this.commentUrl}?taskId=${taskId}`);
   }
 
-  getCommentById(commentId: number): Observable<TaskComment> {
+  getCommentById(commentId: string): Observable<TaskComment> {
     return this.http.get<TaskComment>(`${this.commentUrl}/${commentId}`);
   }
 
