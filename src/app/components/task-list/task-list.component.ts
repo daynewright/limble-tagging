@@ -1,42 +1,57 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { map, switchMap } from 'rxjs';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { map, switchMap, of, Observable, forkJoin, shareReplay } from 'rxjs';
 
 import { TaskModalComponent } from '../task-modal/task-modal.component';
 import { Task, TaskService, TaskStatus } from '../../services/task.service';
 import { Asset, AssetService } from '../../services/asset.service';
-import { User, UserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
   providers: [TaskService],
-  imports: [NgFor, NgIf, NgClass],
+  imports: [NgFor, NgIf, NgClass, AsyncPipe],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
 })
 export class TaskListComponent {
+  tasks$: Observable<Task[]>;
+  asset$: Observable<Asset>;
+
   constructor(
     private dialog: MatDialog,
     private taskService: TaskService,
     private assetService: AssetService,
     private userService: UserService,
     private route: ActivatedRoute
-  ) {}
-  tasks: Task[] = [];
-  users: User[] = [];
-  asset: Asset | undefined = undefined;
+  ) {
+    const assetId = this.route.snapshot.paramMap.get('assetId');
 
-  ngOnInit() {
-    const assetId = this.route.snapshot.paramMap.get('assetId') ?? 'asset-1';
-    this.getTasksByAssetId(assetId);
+    this.asset$ = this.assetService.getAssetById(assetId!).pipe(shareReplay(1));
+
+    this.tasks$ = this.asset$.pipe(
+      switchMap((asset) => this.taskService.getTasksByAssetId(asset.id)),
+      switchMap((tasks) =>
+        forkJoin([
+          of(tasks),
+          this.userService.getUsersByIds(this.extractUserIdsFromTasks(tasks)),
+        ])
+      ),
+      map(([tasks, users]) =>
+        tasks.map((task) => ({
+          ...task,
+          assignedUser: users.find((user) => user.id === task.assignedTo),
+        }))
+      )
+    );
   }
 
   getStatusImage(status: TaskStatus): string {
     switch (status) {
-      case TaskStatus.Ready.valueOf():
+      case TaskStatus.Ready:
         return 'assets/svgs/checkbox.svg';
       case TaskStatus.InProgress:
         return 'assets/svgs/wrench.svg';
@@ -70,46 +85,16 @@ export class TaskListComponent {
     return Array.from(userIds);
   }
 
-  getTasksByAssetId(assetId: string) {
-    this.assetService
-      .getAssetById(assetId)
-      .pipe(
-        switchMap((asset) => {
-          this.asset = asset;
-          return this.taskService.getTasksByAssetId(assetId);
-        }),
-        switchMap((tasks) => {
-          this.tasks = tasks;
-          const userIds = this.extractUserIdsFromTasks(tasks);
-          return this.userService
-            .getUsersByIds(userIds)
-            .pipe(map((users) => ({ tasks, users })));
-        }),
-        map(({ tasks, users }) => {
-          this.users = users;
-          this.tasks = tasks.map((task) => ({
-            ...task,
-            assignedUser: users.find((user) => user.id == task.assignedTo),
-          }));
-        })
-      )
-      .subscribe();
-  }
-
-  getUsersForTasks(userIds: string[]) {
-    this.userService
-      .getUsersByIds(userIds)
-      .subscribe((users: User[]) => (this.users = users));
-  }
-
   openTaskModal(taskId: string): void {
-    this.dialog.open(TaskModalComponent, {
-      width: '90vw',
-      maxWidth: '95vw',
-      minHeight: '90vh',
-      data: {
-        task: this.tasks.find((task) => task.id === taskId),
-      },
-    });
+    this.tasks$
+      .pipe(map((tasks) => tasks.find((task) => task.id === taskId)))
+      .subscribe((task) => {
+        this.dialog.open(TaskModalComponent, {
+          width: '90vw',
+          maxWidth: '95vw',
+          minHeight: '90vh',
+          data: { task },
+        });
+      });
   }
 }

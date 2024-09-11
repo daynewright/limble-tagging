@@ -1,15 +1,27 @@
 import {
+  BehaviorSubject,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
+import {
   Component,
   ElementRef,
   EventEmitter,
   forwardRef,
   HostListener,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { NgIf, NgFor, NgStyle } from '@angular/common';
+import { NgIf, NgFor, NgStyle, AsyncPipe } from '@angular/common';
 
 import { User } from '../../services/user.service';
 
@@ -18,7 +30,7 @@ import { User } from '../../services/user.service';
   templateUrl: './tag-input.component.html',
   styleUrls: ['./tag-input.component.css'],
   standalone: true,
-  imports: [NgIf, NgFor, NgStyle],
+  imports: [NgIf, NgFor, NgStyle, AsyncPipe],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -27,17 +39,19 @@ import { User } from '../../services/user.service';
     },
   ],
 })
-export class TagInputComponent implements ControlValueAccessor {
+export class TagInputComponent implements ControlValueAccessor, OnInit {
   @ViewChild('tagDropdown') tagDropdownRef!: ElementRef<HTMLUListElement>;
   @ViewChild('mainInput') mainInputRef!: ElementRef<HTMLInputElement>;
 
-  @Input() users: User[] = [];
   @Output() taggedUserIdsChange = new EventEmitter<User['id'][]>();
+  @Input() users$!: Observable<User[]>;
 
   private _value: string = '';
   private onChange = (value: string) => {};
 
-  filteredUsers: User[] = [];
+  filteredUsers$ = new BehaviorSubject<User[]>([]);
+  private valueChanges$ = new Subject<string>();
+
   taggedUserIds: User['id'][] = [];
   showSuggestions: boolean = false;
 
@@ -54,6 +68,16 @@ export class TagInputComponent implements ControlValueAccessor {
     this.onChange(val);
   }
 
+  ngOnInit() {
+    this.valueChanges$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((inputValue) => this.showUserSuggestions(inputValue))
+      )
+      .subscribe();
+  }
+
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     this.value = input.value;
@@ -61,9 +85,9 @@ export class TagInputComponent implements ControlValueAccessor {
 
     if (this.showSuggestions) {
       this.dropdownLeft = this.value.length * 6.5;
-      this.showUserSuggestions(this.value);
+      this.valueChanges$.next(this.value);
     } else {
-      this.filteredUsers = [];
+      this.filteredUsers$.next([]);
     }
   }
 
@@ -89,18 +113,18 @@ export class TagInputComponent implements ControlValueAccessor {
     } else if (event.key === 'Enter') {
       if (
         this.arrowkeyLocation >= 0 &&
-        this.arrowkeyLocation < this.filteredUsers.length
+        this.arrowkeyLocation < this.filteredUsers$.getValue().length
       ) {
         event.preventDefault();
-        this.selectUser(this.filteredUsers[this.arrowkeyLocation]);
+        this.selectUser(this.filteredUsers$.getValue()[this.arrowkeyLocation]);
         this.arrowkeyLocation = 0;
       }
     }
   }
 
   private updateHighlightedItem() {
-    if (this.arrowkeyLocation >= this.filteredUsers.length) {
-      this.arrowkeyLocation = this.filteredUsers.length - 1;
+    if (this.arrowkeyLocation >= this.filteredUsers$.getValue().length) {
+      this.arrowkeyLocation = this.filteredUsers$.getValue().length - 1;
     } else if (this.arrowkeyLocation < 0) {
       this.arrowkeyLocation = 0;
     }
@@ -116,18 +140,34 @@ export class TagInputComponent implements ControlValueAccessor {
     });
   }
 
-  showUserSuggestions(input: string) {
+  showUserSuggestions(input: string): Observable<User[]> {
     const searchTerm = input.split('@').pop();
-    if (searchTerm) {
-      this.filteredUsers = this.users.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      if (!this.filteredUsers.length) {
-        this.showSuggestions = false;
-      }
-    } else {
-      this.filteredUsers = this.users;
-    }
+
+    return this.users$.pipe(
+      switchMap((users) => {
+        const filteredUsers = searchTerm?.length
+          ? users.filter((user) =>
+              user.name
+                .toLocaleLowerCase()
+                .includes(searchTerm.toLocaleLowerCase())
+            )
+          : users;
+
+        return of(filteredUsers);
+      }),
+      tap((filteredUsers) => {
+        if (filteredUsers.length) {
+          this.filteredUsers$.next(filteredUsers);
+        } else {
+          this.showSuggestions = false;
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching user suggestions:', error);
+        this.filteredUsers$.next([]);
+        return of([]);
+      })
+    );
   }
 
   selectUser(user: User) {
@@ -138,7 +178,7 @@ export class TagInputComponent implements ControlValueAccessor {
     parts.pop();
 
     this.value = `${parts.join('@')}@${user.name}`;
-    this.filteredUsers = [];
+    this.filteredUsers$.next([]);
     this.showSuggestions = false;
     this.mainInputRef.nativeElement.focus();
   }
