@@ -1,10 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { Observable, BehaviorSubject, switchMap, map, shareReplay } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { map, switchMap } from 'rxjs';
 
 import { TagInputComponent } from '../tag-input/tag-input.component';
-
 import { CommentService, TaskComment } from '../../services/comment.service';
 import { AuthService } from '../../services/auth.service';
 import { User, UserService } from '../../services/user.service';
@@ -13,16 +12,18 @@ import { Task } from '../../services/task.service';
 @Component({
   selector: 'app-comment-section',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, TagInputComponent],
+  imports: [NgFor, NgIf, FormsModule, TagInputComponent, AsyncPipe],
   templateUrl: './comment-section.component.html',
   styleUrls: ['./comment-section.component.css'],
 })
-export class CommentSectionComponent {
+export class CommentSectionComponent implements OnInit {
   @Input() taskId!: Task['id'];
 
-  authUser: User | undefined;
-  users: User[] = [];
-  comments: TaskComment[] = [];
+  authUser$: Observable<User | undefined>;
+  users$: Observable<User[]>;
+  comments$: Observable<TaskComment[]>;
+
+  private commentsSubject = new BehaviorSubject<TaskComment[]>([]);
   newCommentMessage: string = '';
   taggedUserIds: User['id'][] = [];
 
@@ -30,60 +31,52 @@ export class CommentSectionComponent {
     private userService: UserService,
     private commentService: CommentService,
     private authService: AuthService
-  ) {}
+  ) {
+    this.authUser$ = this.authService.authUser$.pipe(shareReplay(1));
+    this.users$ = this.userService.getAllUsers().pipe(shareReplay(1));
 
-  ngOnInit() {
-    this.getCommentsByTaskId(this.taskId);
-    this.getAllUsers();
-
-    this.authService.authUser$.subscribe(
-      (authUser) => (this.authUser = authUser)
+    this.comments$ = this.commentsSubject.asObservable().pipe(
+      switchMap((comments) =>
+        this.users$.pipe(
+          map((users) =>
+            comments.map((comment) => ({
+              ...comment,
+              user: users.find((user) => user.id === comment.userId),
+            }))
+          )
+        )
+      )
     );
   }
 
-  getAllUsers() {
-    this.userService
-      .getAllUsers()
-      .subscribe((users: User[]) => (this.users = users));
+  ngOnInit() {
+    if (this.taskId) {
+      this.getAllComments();
+    } else {
+      console.error('TASKID is missing');
+    }
   }
 
-  getCommentsByTaskId(taskId: string) {
+  private getAllComments() {
     this.commentService
-      .getAllCommentsByTaskId(taskId)
-      .pipe(
-        switchMap((comments) => {
-          this.comments = comments;
-          return this.userService
-            .getUsersByIds(comments.map((c) => c.userId))
-            .pipe(map((users) => users));
-        }),
-        map((users) => {
-          this.comments = this.comments.map((c) => ({
-            ...c,
-            user: users.find((u) => u.id === c.userId),
-          }));
-        })
-      )
-      .subscribe();
+      .getAllCommentsByTaskId(this.taskId)
+      .subscribe((comments) => this.commentsSubject.next(comments));
   }
 
   postCommentByUserId(message: string) {
-    this.commentService
-      .postCommentByUserId(
-        message,
-        this.authUser!.id,
-        this.taskId,
-        this.taggedUserIds
+    this.authUser$
+      .pipe(
+        switchMap((authUser) =>
+          this.commentService.postCommentByUserId(
+            message,
+            authUser?.id!,
+            this.taskId,
+            this.taggedUserIds
+          )
+        ),
+        switchMap(() => this.commentService.getAllCommentsByTaskId(this.taskId))
       )
-      .subscribe((comment: TaskComment) => {
-        this.comments = [
-          ...this.comments,
-          {
-            ...comment,
-            user: this.users.find((u) => u.id === comment.userId),
-          },
-        ];
-      });
+      .subscribe((comments) => this.commentsSubject.next(comments));
   }
 
   onTaggedUserIdsChange(taggedUserIds: User['id'][]): void {
@@ -93,7 +86,6 @@ export class CommentSectionComponent {
   commentSubmit() {
     if (this.newCommentMessage.trim()) {
       this.postCommentByUserId(this.newCommentMessage);
-
       this.newCommentMessage = '';
       this.taggedUserIds = [];
     }

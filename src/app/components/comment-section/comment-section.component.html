@@ -4,7 +4,7 @@
   </h3>
   <ul class="space-y-2 text-sm mt-2 overflow-auto max-h-96">
     <li
-      *ngFor="let comment of comments"
+      *ngFor="let comment of comments$ | async"
       class="p-2 bg-gray-100 rounded shadow-sm"
     >
       <img
@@ -21,7 +21,7 @@
   <div class="mt-4">
     <form (ngSubmit)="commentSubmit()">
       <app-tag-input
-        [users]="users"
+        [users$]="users$"
         [(ngModel)]="newCommentMessage"
         (taggedUserIdsChange)="onTaggedUserIdsChange($event)"
         name="commentMessage"

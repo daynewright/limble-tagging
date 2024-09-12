@@ -11,12 +11,14 @@
 
     <!-- Asset Details -->
     <div class="bg-white border border-gray-200 p-6 rounded-lg shadow-sm mb-6">
+      @if (asset$ | async; as asset) {
       <h3 class="text-lg font-medium leading-6 text-gray-900">
-        {{ asset?.name }}
+        {{ asset.name }}
       </h3>
       <p class="mt-1 text-sm text-gray-500">
-        {{ asset?.description }}
+        {{ asset.description }}
       </p>
+      }
     </div>
 
     <!-- Tasks List -->
@@ -25,17 +27,8 @@
         <h3 class="text-lg font-medium leading-6 text-gray-900">Tasks</h3>
       </div>
       <div class="divide-y divide-gray-200">
-        <!-- Task Item -->
-
-        <div *ngIf="!tasks.length" class="flex justify-center bg-yellow-100">
-          <p class="p-10 font-semibold">
-            Oops... doesn't look like this asset doesn't have any tasks at the
-            moment.
-          </p>
-        </div>
-
+        @for (task of tasks$ | async; track task) {
         <div
-          *ngFor="let task of tasks"
           (click)="openTaskModal(task.id)"
           class="cursor-pointer flex py-4 px-6 items-center hover:bg-gray-50"
         >
@@ -88,6 +81,11 @@
             </ng-template>
           </div>
         </div>
+        } @empty {
+        <p class="p-10 font-semibold">
+          Oops... this asset doesn't have any tasks at the moment.
+        </p>
+        }
       </div>
     </div>
   </div>
