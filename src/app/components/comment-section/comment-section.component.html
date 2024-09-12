@@ -23,6 +23,7 @@
       <app-tag-input
         [users]="users"
         [(ngModel)]="newCommentMessage"
+        (taggedUserIdsChange)="onTaggedUserIdsChange($event)"
         name="commentMessage"
       />
       <div class="flex items-center space-x-2">

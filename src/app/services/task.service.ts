@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { TaskComment } from './comment.service';
 import { User } from './user.service';
+import { Asset } from './asset.service';
 
 export enum TaskStatus {
   Ready = 'Ready',
@@ -30,11 +31,11 @@ export class TaskService {
   constructor(private http: HttpClient) {}
   private taskUrl = `${environment.apiUrl}/tasks`;
 
-  getTasksByAssetId(assetId: string): Observable<Task[]> {
+  getTasksByAssetId(assetId: Asset['id']): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.taskUrl}?assetId=${assetId}`);
   }
 
-  getTaskById(taskId: string): Observable<Task> {
+  getTaskById(taskId: Task['id']): Observable<Task> {
     return this.http.get<Task>(`${this.taskUrl}/${taskId}`);
   }
 }

@@ -1,9 +1,11 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   forwardRef,
   HostListener,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -30,16 +32,19 @@ export class TagInputComponent implements ControlValueAccessor {
   @ViewChild('mainInput') mainInputRef!: ElementRef<HTMLInputElement>;
 
   @Input() users: User[] = [];
+  @Output() taggedUserIdsChange = new EventEmitter<User['id'][]>();
 
   private _value: string = '';
   private onChange = (value: string) => {};
 
   filteredUsers: User[] = [];
+  taggedUserIds: User['id'][] = [];
   showSuggestions: boolean = false;
 
   dropdownTop: number = 45;
   dropdownLeft: number = 5;
   arrowkeyLocation: number = -1;
+
   get value(): string {
     return this._value;
   }
@@ -126,6 +131,9 @@ export class TagInputComponent implements ControlValueAccessor {
   }
 
   selectUser(user: User) {
+    this.taggedUserIds = Array.from(new Set([...this.taggedUserIds, user.id]));
+    this.taggedUserIdsChange.emit(this.taggedUserIds);
+
     const parts = this.value.split('@');
     parts.pop();
 

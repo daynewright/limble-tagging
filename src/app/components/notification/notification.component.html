@@ -1,0 +1,17 @@
+<div class="relative ml-4 flex-shrink-0">
+  <span class="font-bold block px-4 py-2 text-sm text-gray-700">
+    NOTIFICATIONS
+  </span>
+
+  <div *ngIf="notifications.length > 0; else noNotifications">
+    <div *ngFor="let notification of notifications">
+      <p class="p-2 font-light text-sm">
+        <span class="font-semibold">{{ notification.name }}</span> tagged you!
+      </p>
+    </div>
+  </div>
+
+  <ng-template #noNotifications>
+    <p class="p-2 font-light text-sm text-gray-500">No notifications yet.</p>
+  </ng-template>
+</div>

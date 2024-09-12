@@ -20,12 +20,13 @@ export class UserService {
     return this.http.get<User[]>(this.userUrl);
   }
 
-  getUserById(userId: string): Observable<User> {
+  getUserById(userId: User['id']): Observable<User> {
     return this.http.get<User>(`${this.userUrl}/${userId}`);
   }
 
-  getUsersByIds(userIds: string[]): Observable<User[]> {
-    return this.http.get<User[]>(this.userUrl);
-    // .pipe(map((users) => users.filter((user) => userIds.includes(user.id))));
+  getUsersByIds(userIds: User['id'][]): Observable<User[]> {
+    return this.http
+      .get<User[]>(this.userUrl)
+      .pipe(map((users) => users.filter((user) => userIds.includes(user.id))));
   }
 }
