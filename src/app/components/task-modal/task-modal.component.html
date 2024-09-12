@@ -23,10 +23,6 @@
     </div>
 
     <!-- Composable Comments Section -->
-    <app-comment-section
-      [comments]="comments"
-      [users]="users"
-      (submitComment)="postCommentByUserId($event)"
-    />
+    <app-comment-section [taskId]="task.id" />
   </div>
 </div>
