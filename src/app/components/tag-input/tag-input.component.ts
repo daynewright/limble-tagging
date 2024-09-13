@@ -57,6 +57,8 @@ export class TagInputComponent implements ControlValueAccessor {
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     this.value = input.value;
+    this.showSuggestions =
+      this.value.includes(' @') || this.value.indexOf('@') === 0;
 
     if (this.showSuggestions) {
       this.dropdownLeft = this.value.length * 6.5;
