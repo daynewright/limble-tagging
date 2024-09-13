@@ -57,7 +57,6 @@ export class TagInputComponent implements ControlValueAccessor {
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     this.value = input.value;
-    this.showSuggestions = this.value.includes('@');
 
     if (this.showSuggestions) {
       this.dropdownLeft = this.value.length * 6.5;
@@ -117,10 +116,10 @@ export class TagInputComponent implements ControlValueAccessor {
   }
 
   showUserSuggestions(input: string) {
-    const searchTerm = input.split('@').pop();
-    if (searchTerm) {
+    const searchName = input.split('@').pop();
+    if (searchName) {
       this.filteredUsers = this.users.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+        user.name.toLowerCase().includes(searchName.toLowerCase())
       );
       if (!this.filteredUsers.length) {
         this.showSuggestions = false;

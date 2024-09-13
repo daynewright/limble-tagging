@@ -36,8 +36,8 @@ export class TaskListComponent {
 
   getStatusImage(status: TaskStatus): string {
     switch (status) {
-      case TaskStatus.Ready.valueOf():
-        return 'assets/svgs/checkbox.svg';
+      case TaskStatus.Ready:
+        return 'assets/svgs/play.svg';
       case TaskStatus.InProgress:
         return 'assets/svgs/wrench.svg';
       case TaskStatus.Completed:
@@ -50,7 +50,7 @@ export class TaskListComponent {
   getStatusClass(status: TaskStatus): string {
     switch (status) {
       case TaskStatus.Ready:
-        return 'bg-red-100';
+        return 'bg-blue-100';
       case TaskStatus.InProgress:
         return 'bg-yellow-100';
       case TaskStatus.Completed:

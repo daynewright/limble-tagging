@@ -1,7 +1,6 @@
 import { NgClass, NgFor } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
 
 import { Task } from '../../services/task.service';
 import { CommentSectionComponent } from '../comment-section/comment-section.component';
@@ -9,7 +8,7 @@ import { CommentSectionComponent } from '../comment-section/comment-section.comp
 @Component({
   selector: 'app-task-modal',
   standalone: true,
-  imports: [NgClass, NgFor, FormsModule, CommentSectionComponent],
+  imports: [NgClass, NgFor, CommentSectionComponent],
   templateUrl: './task-modal.component.html',
   styleUrl: './task-modal.component.css',
 })
