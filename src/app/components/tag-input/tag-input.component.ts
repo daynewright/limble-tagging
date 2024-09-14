@@ -34,6 +34,8 @@ export class TagInputComponent implements ControlValueAccessor {
   @Input() users: User[] = [];
   @Output() taggedUsersChange = new EventEmitter<User[]>();
 
+  private _atIndex: number = -1;
+
   private _value: string = '';
   private onChange = (value: string) => {};
 
@@ -56,13 +58,18 @@ export class TagInputComponent implements ControlValueAccessor {
 
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
+
+    const cursorPosition = input.selectionStart ?? 0;
+    const atIndex = input.value.lastIndexOf('@', cursorPosition - 1);
+    const searchName = input.value.substring(atIndex + 1, cursorPosition);
+
+    this.showSuggestions = atIndex !== -1;
     this.value = input.value;
-    this.showSuggestions =
-      this.value.includes(' @') || this.value.indexOf('@') === 0;
+    this._atIndex = atIndex;
 
     if (this.showSuggestions) {
-      this.dropdownLeft = this.value.length * 6.5;
-      this.showUserSuggestions(this.value);
+      this.dropdownLeft = cursorPosition * 6.5;
+      this.showUserSuggestions(searchName);
     } else {
       this.filteredUsers = [];
     }
@@ -117,8 +124,7 @@ export class TagInputComponent implements ControlValueAccessor {
     });
   }
 
-  showUserSuggestions(input: string) {
-    const searchName = input.split('@').pop();
+  showUserSuggestions(searchName?: string) {
     if (searchName) {
       this.filteredUsers = this.users.filter((user) =>
         user.name.toLowerCase().includes(searchName.toLowerCase())
@@ -135,10 +141,14 @@ export class TagInputComponent implements ControlValueAccessor {
     this.taggedUsers = Array.from(new Set([...this.taggedUsers, user]));
     this.taggedUsersChange.emit(this.taggedUsers);
 
-    const parts = this.value.split('@');
-    parts.pop();
+    const endOfNameIndex = this.value.indexOf(' ', this._atIndex + 1);
+    const endIndex = endOfNameIndex !== -1 ? endOfNameIndex : this.value.length;
 
-    this.value = `${parts.join('@')}@${user.name}`;
+    const beforeAt = this.value.slice(0, this._atIndex);
+    const afterAt = this.value.slice(endIndex);
+
+    this.value = `${beforeAt}@${user.name}${afterAt}`;
+
     this.filteredUsers = [];
     this.showSuggestions = false;
     this.mainInputRef.nativeElement.focus();
