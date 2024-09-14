@@ -24,7 +24,7 @@ export class CommentSectionComponent {
   users: User[] = [];
   comments: TaskComment[] = [];
   newCommentMessage: string = '';
-  taggedUserIds: User['id'][] = [];
+  taggedUsers: User[] = [];
 
   constructor(
     private userService: UserService,
@@ -73,7 +73,17 @@ export class CommentSectionComponent {
         message,
         this.authUser!.id,
         this.taskId,
-        this.taggedUserIds
+        this.taggedUsers.reduce<User['id'][]>((userIds, nextUser) => {
+          const lowerCaseMessage = message.toLocaleLowerCase();
+          const lowerCaseName = nextUser.name.toLocaleLowerCase();
+
+          if (
+            lowerCaseMessage.includes(`@${lowerCaseName.toLocaleLowerCase()}`)
+          ) {
+            return [...userIds, nextUser.id];
+          }
+          return userIds;
+        }, [])
       )
       .subscribe((comment: TaskComment) => {
         this.comments = [
@@ -86,8 +96,8 @@ export class CommentSectionComponent {
       });
   }
 
-  onTaggedUserIdsChange(taggedUserIds: User['id'][]): void {
-    this.taggedUserIds = taggedUserIds;
+  onTaggedUserIdsChange(taggedUsers: User[]): void {
+    this.taggedUsers = taggedUsers;
   }
 
   commentSubmit() {
@@ -95,7 +105,7 @@ export class CommentSectionComponent {
       this.postCommentByUserId(this.newCommentMessage);
 
       this.newCommentMessage = '';
-      this.taggedUserIds = [];
+      this.taggedUsers = [];
     }
   }
 
