@@ -32,13 +32,13 @@ export class TagInputComponent implements ControlValueAccessor {
   @ViewChild('mainInput') mainInputRef!: ElementRef<HTMLInputElement>;
 
   @Input() users: User[] = [];
-  @Output() taggedUserIdsChange = new EventEmitter<User['id'][]>();
+  @Output() taggedUsersChange = new EventEmitter<User[]>();
 
   private _value: string = '';
   private onChange = (value: string) => {};
 
   filteredUsers: User[] = [];
-  taggedUserIds: User['id'][] = [];
+  taggedUsers: User[] = [];
   showSuggestions: boolean = false;
 
   dropdownTop: number = 45;
@@ -132,8 +132,8 @@ export class TagInputComponent implements ControlValueAccessor {
   }
 
   selectUser(user: User) {
-    this.taggedUserIds = Array.from(new Set([...this.taggedUserIds, user.id]));
-    this.taggedUserIdsChange.emit(this.taggedUserIds);
+    this.taggedUsers = Array.from(new Set([...this.taggedUsers, user]));
+    this.taggedUsersChange.emit(this.taggedUsers);
 
     const parts = this.value.split('@');
     parts.pop();
