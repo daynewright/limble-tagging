@@ -63,7 +63,12 @@ export class TagInputComponent implements ControlValueAccessor {
     const atIndex = input.value.lastIndexOf('@', cursorPosition - 1);
     const searchName = input.value.substring(atIndex + 1, cursorPosition);
 
-    this.showSuggestions = atIndex !== -1;
+    const hasAtIndex = atIndex !== -1;
+    const atIndexFirst = atIndex === 0;
+    const noCharBeforeAtIndex = !/[a-zA-Z]/.test(input.value[atIndex - 1]);
+
+    this.showSuggestions = hasAtIndex && (atIndexFirst || noCharBeforeAtIndex);
+
     this.value = input.value;
     this._atIndex = atIndex;
 
